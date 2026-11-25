@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tiaong Water District - Service Application and Construction Form</title>
+<style>
+:root{--ink:#111;--blue:#0878b9}
+*{box-sizing:border-box}
+body{margin:0;padding:18px;background:#edf1f5;font:13px Arial,sans-serif;color:var(--ink)}
+.toolbar{max-width:900px;margin:0 auto 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toolbar button{border:0;border-radius:4px;padding:10px 15px;color:#fff;font-weight:bold;cursor:pointer}
+.save{background:#198754}.print{background:#0878b9}.new{background:#6c757d}.export{background:#6f42c1}
+.toolbar input{padding:9px;border:1px solid #aaa;border-radius:4px;min-width:220px}
+.sheet{width:210mm;min-height:297mm;margin:auto;background:white;padding:2mm;border:1px solid #333;box-shadow:0 2px 12px #0002}
+.header{text-align:center;height:19mm;border-bottom:1.4px solid #111;padding:2mm 0 1mm}
+.header h2{font-size:15px;margin:0 0 1px;letter-spacing:.2px}
+.header .place{font-size:12px;margin:0 0 2px}
+.header h3{font-size:14px;margin:0;font-weight:bold}
+.top{display:grid;grid-template-columns:43% 57%;min-height:77mm;border-bottom:1.4px solid}
+.lefttop{border-right:1.4px solid;padding:2px 4px;display:flex;flex-direction:column}
+.applicant-lines{height:15mm;line-height:1.8}
+.linefield{display:inline-flex;align-items:baseline;gap:4px}
+.linefield input{border:0;border-bottom:1px solid #111;border-radius:0;padding:1px 2px;min-width:40px;background:transparent}
+.linefield .wide{width:55mm}
+.declaration{border-top:1px solid #111;padding:4px 2px;line-height:1.45;flex:1}
+.declaration textarea{width:100%;height:35mm;resize:none;border:0;font:12px Arial;line-height:1.4}
+.signature{display:flex;gap:12px;align-items:end;margin-top:2px}
+.signature input{border:0;border-bottom:1px solid;width:55%;padding:2px}
+.signature .date{width:25%}
+.siglabel{font-weight:bold;text-align:center;margin-top:2px}
+.righttop{display:grid;grid-template-rows:25mm 1fr}
+.investigation{padding:3px 5px;border-bottom:1.4px solid}
+.investigation-title{text-align:center;margin:1px 0 6px}
+.investigation-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 8px}
+.checkline{display:flex;align-items:center;gap:5px}
+.checkline input{width:15px;height:15px}
+.investigated{margin-top:5px;display:flex;align-items:end;gap:5px}
+.investigated input{border:0;border-bottom:1px solid;width:65%;padding:2px}
+.chargepay{display:grid;grid-template-columns:55% 45%}
+.charges{padding:5px;border-right:1.4px solid}
+.payments{padding:5px}
+.subhead{text-align:center;font-weight:bold;margin:2px 0 8px}
+.charge-row{display:grid;grid-template-columns:1fr 10px 18mm;align-items:center;margin:4px 0}
+.charge-row input{border:0;border-bottom:1px solid;padding:1px;width:100%;text-align:right}
+.total{font-weight:bold;margin-top:8px}
+.payments .payfield{margin:12px 0 22px}
+.payfield input{width:100%;border:0;border-bottom:1px solid;padding:3px}
+.middle{display:grid;grid-template-columns:43% 27% 30%;min-height:82mm;border-bottom:1.4px solid}
+.contact{padding:5px 3px;border-right:1.4px solid}
+.contact .contactrow{margin:6px 0;display:flex;align-items:end;gap:3px}
+.contactrow label{white-space:nowrap;font-weight:bold}
+.contactrow input{border:0;border-bottom:1px solid;min-width:0;flex:1;padding:2px}
+.contact .landmark{display:block;margin-top:6px;font-weight:bold}
+.contact textarea{width:100%;height:22mm;border:0;border-bottom:1px solid;resize:none}
+.record{padding:5px 4px;border-right:1.4px solid;position:relative}
+.record-title{text-align:center;font-weight:bold;font-size:11px;line-height:1.25;margin:1px 0 8px}
+.record .recordfield{display:flex;align-items:end;gap:3px;margin:5px 0}
+.recordfield label{white-space:nowrap}
+.recordfield input{min-width:0;flex:1;border:0;border-bottom:1px solid;padding:1px}
+.checkedby{font-weight:bold;margin-top:7px}
+.record .signoff{position:absolute;bottom:4px;left:4px;right:4px;text-align:center;font-size:10px;line-height:1.4}
+.signoff input{width:95%;border:0;border-bottom:1px solid;text-align:center}
+.signoff .person{font-weight:bold;margin:0 0 3px; font-size: 12px ;}
+.approvals{display:grid;grid-template-rows:1fr 1fr}
+.approval{padding:5px 4px;text-align:center}
+.approval:first-child{border-bottom:1.4px solid}
+.approval .role{font-weight:bold;font-size:10px;margin:2px 0 13px}
+.approval .person{font-weight:bold;margin:0 0 3px; font-size: 12px ;}
+.approval .position{font-size:10px;margin:0 0 4px}
+.approval input{width:100%;border:0;border-bottom:1px solid;text-align:center;padding:2px}
+.approval .approved{font-weight:bold;margin:5px 0 12px}
+.approval .details{text-align:left;line-height:1.6;margin-top:8px}
+.approval .details input{width:68%;text-align:left}
+.sketch{height:88mm;padding:4px 3px}
+.sketch-title{font-weight:bold;font-size:11px;margin:2px 0 5px}
+.sketch textarea{width:100%;height:76mm;border:0;resize:none;font:13px Arial}
+input,textarea,select{font-family:Arial,sans-serif;font-size:12px}
+.records{max-width:900px;margin:18px auto;background:white;padding:12px;border-radius:6px}
+.records h3{margin:0 0 8px}
+.records table{width:100%;border-collapse:collapse;font-size:12px}
+.records th,.records td{border:1px solid #ccc;padding:6px;text-align:left}
+.records th{background:#e8f1f7}
+.records button{padding:5px 8px;margin:1px;border:0;color:white;border-radius:3px;cursor:pointer}
+@media(max-width:850px){.sheet{width:100%;min-height:0}.top,.middle{grid-template-columns:43% 57%}.middle{grid-template-columns:43% 27% 30%}.sheet{overflow-x:auto}}
+@media print{
+ @page{size:A4 portrait;margin:5mm}
+ body{padding:0;background:#fff}
+ .toolbar,.records{display:none!important}
+ .sheet{width:200mm;min-height:287mm;margin:0;border:1px solid #111;box-shadow:none;padding:1mm;page-break-after:avoid}
+ input,textarea{color:#000}
+ .top{min-height:77mm}.middle{min-height:82mm}.sketch{height:88mm}
+}
+</style>
+</head>
+<body>
+<div class="toolbar">
+ <button class="save" onclick="saveRecord()">SAVE APPLICATION</button>
+ <button class="print" onclick="window.print()">PRINT / SAVE PDF</button>
+ <button class="new" onclick="newRecord()">NEW APPLICATION</button>
+ <button class="export" onclick="exportCSV()">EXPORT RECORDS (CSV)</button>
+ <input id="search" placeholder="Search application / applicant" oninput="renderRecords()">
+</div>
+
+<main class="sheet">
+ <header class="header">
+  <h2>TIAONG WATER DISTRICT</h2>
+  <p class="place">Tiaong, Quezon</p>
+  <h3>SERVICE APPLICATION AND CONSTRUCTION FORM</h3>
+ </header>
+
+ <section class="top">
+  <div class="lefttop">
+   <div class="applicant-lines">
+    <div class="linefield"><b>Applicant :</b><input class="wide" id="applicant"></div><br>
+    <div class="linefield"><b>Address :</b><input class="wide" id="address"></div>
+   </div>
+   <div class="declaration">
+    <textarea id="declaration">I hereby apply for a water connection site to be located at /&#10;&#10;I hereby understand that the connection will be made until it is approved and all charges are paid. I assume responsibility for the meter and all water that passes through the connection. I will conform to the rules and regulations of the Water District.</textarea>
+    <div class="signature">
+     <input id="applicantSignature" aria-label="Applicant signature">
+     <input class="date" id="signatureDate" aria-label="Signature date" type="date">
+    </div>
+    <div class="siglabel">Applicant's Signature <span style="font-weight:normal">　 Date</span></div>
+   </div>
+  </div>
+
+  <div class="righttop">
+   <div class="investigation">
+    <div class="investigation-title">Investigation of Application</div>
+    <div class="investigation-grid">
+     <span>System is</span>
+     <label class="checkline"><input type="checkbox" id="adequate"> Adequate</label>
+     <span></span>
+     <label class="checkline"><input type="checkbox" id="notAdequate"> Not Adequate</label>
+    </div>
+    <div class="investigated">Investigated by: <input id="investigatedBy"></div>
+   </div>
+   <div class="chargepay">
+    <div class="charges">
+     <div class="subhead">AMOUNT OF CHARGES DUE:</div>
+     <div class="charge-row"><span>Application Fee</span><b>P</b><input id="applicationFee" type="number" step=".01"></div>
+     <div class="charge-row"><span>Water Meter</span><b>P</b><input id="waterMeter" type="number" step=".01"></div>
+     <div class="charge-row"><span>Ball Valve</span><b>P</b><input id="ballValve" type="number" step=".01"></div>
+     <div class="charge-row"><span>Other Materials</span><b>P</b><input id="otherMaterials" type="number" step=".01"></div>
+     <div class="charge-row total"><span>TOTAL</span><b>P</b><input id="totalCharges" readonly></div>
+    </div>
+    <div class="payments">
+     <div class="subhead">PAYMENT DETAILS:</div>
+     <div class="payfield">Date<input id="paymentDate" type="date"></div>
+     <div class="payfield">Invoice No.<input id="invoiceNo"></div>
+    </div>
+   </div>
+  </div>
+ </section>
+
+ <section class="middle">
+  <div class="contact">
+   <div class="contactrow"><label>CONTACT NUMBER :</label><span>/</span><input id="contact"></div>
+   <div class="contactrow"><label>EMAIL ADDRESS/:</label><input id="email"></div>
+   <div class="contactrow"><label>NEAREST CONNECTION/:</label><input id="nearestConnection"></div>
+   <label class="landmark">LANDMARK/:</label>
+   <textarea id="landmark"></textarea>
+  </div>
+  <div class="record">
+   <div class="record-title">SERVICE APPLICATION<br>RECORD AFTER<br>INSTALLATION</div>
+   <div class="recordfield"><label>Size of Saddle Clamp</label><input id="saddleClamp"></div>
+   <div class="recordfield"><label>Meter No.</label><input id="meterNo"></div>
+   <div class="recordfield"><label>Account No.</label><input id="accountNo"></div>
+   <div class="recordfield"><label>Rate Code:</label><input id="rateCode"></div>
+   <div class="checkedby">CHECKED BY:</div>
+   <div class="signoff"> <p class="person">IVY KRISTINE E. MANGUNDAYAO</p> DIVISION MANAGER /<br>FIN. &amp; COMMERCIAL DIVISION</div>
+  </div>
+  <div class="approvals">
+   <div class="approval">
+    <div class="role">RECOMMENDED FOR INSTALLATION</div>
+    <div style="height:14px"></div>
+    <p class="person">ENGR. ANSELMO B. ADAME</p>
+    <p class="position">DIV. MNGR. C. ENGG. &amp;<br>PRODUCTION DIVISION</p>
+    <input id="recommendedDate" type="text" aria-label="Recommendation date">
+   </div>
+   <div class="approval">
+    <div class="approved">APPROVED</div>
+    <p class="person">ENGR. PERSEVERANDO T. ATIENZA</p>
+    <p class="position">GENERAL MANAGER</p>
+    <div class="details">
+     Installed by: <input id="installedBy"><br>
+     Date: <input id="installationDate" type="date"><br>
+     Remarks: <input id="installationRemarks">
+    </div>
+   </div>
+  </div>
+ </section>
+
+ <section class="sketch">
+  <div class="sketch-title">SKETCH OF LOCATION OF PROPOSED SERVICE</div>
+  <textarea id="sketch" aria-label="Sketch of location of proposed service"></textarea>
+ </section>
+</main>
+
+<section class="records">
+ <h3>Saved Applications</h3>
+ <table>
+  <thead><tr><th>Applicant</th><th>Address</th><th>Contact</th><th>Invoice No.</th><th>Actions</th></tr></thead>
+  <tbody id="recordRows"></tbody>
+ </table>
+</section>
+
+<script>
+const ids = [
+'applicant','address','declaration','applicantSignature','signatureDate',
+'adequate','notAdequate','investigatedBy','applicationFee','waterMeter',
+'ballValve','otherMaterials','totalCharges','paymentDate','invoiceNo',
+'contact','email','nearestConnection','landmark','saddleClamp','meterNo',
+'accountNo','rateCode','checkedBy','recommendedDate','installedBy',
+'installationDate','installationRemarks','sketch'
+];
+let applications = JSON.parse(localStorage.getItem('twdServiceApplications') || '[]');
+let editingId = null;
+const $ = id => document.getElementById(id);
+
+function updateTotal(){
+ const sum = ['applicationFee','waterMeter','ballValve','otherMaterials']
+  .reduce((n,id)=>n+(parseFloat($(id).value)||0),0);
+ $('totalCharges').value = sum.toFixed(2);
+}
+['applicationFee','waterMeter','ballValve','otherMaterials'].forEach(id=>{
+ $(id).addEventListener('input',updateTotal);
+});
+
+function getData(){
+ const data={};
+ ids.forEach(id=>{
+  const el=$(id);
+  data[id]=el.type==='checkbox'?el.checked:el.value;
+ });
+ return data;
+}
+function setData(data){
+ ids.forEach(id=>{
+  const el=$(id);
+  if(el.type==='checkbox') el.checked=!!data[id];
+  else el.value=data[id] ?? '';
+ });
+ updateTotal();
+}
+function saveRecord(){
+ const data=getData();
+ if(!data.applicant.trim()){alert('Please enter the applicant name.');$('applicant').focus();return;}
+ if(!data.address.trim()){alert('Please enter the service address.');$('address').focus();return;}
+ if(editingId){
+  const i=applications.findIndex(x=>x.id===editingId);
+  if(i>=0) applications[i]={...data,id:editingId};
+ }else{
+  editingId=String(Date.now());
+  applications.push({...data,id:editingId});
+ }
+ localStorage.setItem('twdServiceApplications',JSON.stringify(applications));
+ renderRecords();
+ alert('Application saved in this browser.');
+}
+function loadRecord(id){
+ const item=applications.find(x=>x.id===id);
+ if(!item)return;
+ editingId=id;setData(item);window.scrollTo({top:0,behavior:'smooth'});
+}
+function deleteRecord(id){
+ if(!confirm('Delete this saved application?'))return;
+ applications=applications.filter(x=>x.id!==id);
+ localStorage.setItem('twdServiceApplications',JSON.stringify(applications));
+ if(editingId===id)newRecord(false);
+ renderRecords();
+}
+function newRecord(confirmFirst=true){
+ if(confirmFirst && !confirm('Start a new blank application?'))return;
+ ids.forEach(id=>{
+  const el=$(id);
+  if(el.type==='checkbox')el.checked=false;
+  else el.value='';
+ });
+ $('declaration').value='I hereby apply for a water connection site to be located at /\\n\\nI hereby understand that the connection will be made until it is approved and all charges are paid. I assume responsibility for the meter and all water that passes through the connection. I will conform to the rules and regulations of the Water District.';
+ editingId=null;updateTotal();
+}
+function renderRecords(){
+ const q=$('search').value.toLowerCase();
+ $('recordRows').innerHTML='';
+ applications.filter(x=>(x.applicant||'').toLowerCase().includes(q)||
+  (x.address||'').toLowerCase().includes(q)||
+  (x.invoiceNo||'').toLowerCase().includes(q))
+ .forEach(x=>{
+  const tr=document.createElement('tr');
+  [x.applicant,x.address,x.contact,x.invoiceNo].forEach(v=>{
+   const td=document.createElement('td');td.textContent=v||'';tr.appendChild(td);
+  });
+  const td=document.createElement('td');
+  const edit=document.createElement('button');edit.textContent='Open';edit.style.background='#0878b9';edit.onclick=()=>loadRecord(x.id);
+  const del=document.createElement('button');del.textContent='Delete';del.style.background='#dc3545';del.onclick=()=>deleteRecord(x.id);
+  td.append(edit,del);tr.appendChild(td);$('recordRows').appendChild(tr);
+ });
+}
+function exportCSV(){
+ const cols=['applicant','address','contact','email','invoiceNo','paymentDate','totalCharges','meterNo','accountNo'];
+ const esc=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+ const csv=[cols.join(','),...applications.map(x=>cols.map(c=>esc(x[c])).join(','))].join('\\r\\n');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+ a.download='TWD_Service_Applications.csv';a.click();URL.revokeObjectURL(a.href);
+}
+renderRecords();updateTotal();
+</script>
+</body>
+</html>
